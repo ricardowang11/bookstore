@@ -10,10 +10,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     String ID=request.getParameter("bookID");
-    BookDB books= (BookDB) getServletConfig().getServletContext().getAttribute("BOOKS");
     ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
-
-    BookDetails book=books.findBook(ID);
+    BookDB books=new BookDB();
+    BookDetails book=books.getBookDetails(ID);
     shoppingCart.add(book);
     getServletConfig().getServletContext().setAttribute("SHOPPINGCART",shoppingCart);
 %>

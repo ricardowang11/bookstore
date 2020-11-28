@@ -30,13 +30,6 @@ public class BookDetails {
         }
 
     }
-//    public void println(PrintWriter out){
-//        out.println("书名："+TITLE);
-//        out.println("作者："+NAME+"  ("+YR+") ");
-//        out.println("价格(元)："+PRICE);
-//        out.println("销售数量(本)："+SALES);
-//        out.println("评论："+DESCRIPTION);
-//    }
     @Override
     public String toString() {
         StringBuilder sb=new StringBuilder();

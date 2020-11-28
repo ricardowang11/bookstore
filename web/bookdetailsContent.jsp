@@ -11,9 +11,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    BookDB books= (BookDB) getServletConfig().getServletContext().getAttribute("BOOKS");
+    BookDB books=new BookDB();
     String bookID=request.getParameter("bookID");
-    BookDetails bookDetails=books.findBook(bookID);
+    BookDetails bookDetails=books.getBookDetails(bookID);
     int sales;
     float price;
     if (bookDetails!=null){

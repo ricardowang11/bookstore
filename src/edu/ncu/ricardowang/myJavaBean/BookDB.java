@@ -14,64 +14,83 @@ public class BookDB {
     private String driver = "com.mysql.cj.jdbc.Driver";
     private String url="jdbc:mysql://47.116.142.55:3306/BookDB?&useSSL=false&serverTimezone=UTC";
     private Connection con;
-    private Statement stat;
-    private LinkedHashSet<BookDetails> books=new LinkedHashSet<>();
+    private PreparedStatement stat;
+    private ResultSet rs;
 
-    public BookDetails findBook(String bookID){
-
-        Iterator<BookDetails> iterator=books.iterator();
-        while (iterator.hasNext()){
-            BookDetails book=iterator.next();
-            if (book.equals(bookID)){
-                return book;
-            }
-        }
-        return null;
-    }
-    public void init(){
+    public BookDB() {
+        //注册JDBC驱动程序
         try {
-            //注册JDBC驱动程序
             Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public  LinkedHashSet<BookDetails> getBooks(){
+        LinkedHashSet<BookDetails> books=new LinkedHashSet<>();
+        try {
+
             //建立连接
             con = DriverManager.getConnection(url, databaseUser, databasePassword);
             if (!con.isClosed()) {
                 System.out.println("数据库连接成功");
             }
-            stat=con.createStatement();
             String sql="select * from BOOKS";
-            ResultSet rs= stat.executeQuery(sql);
+            stat=con.prepareStatement(sql);
+
+            ResultSet rs= stat.executeQuery();
             while (rs.next()){
                 BookDetails bookDetails=new BookDetails();
                 bookDetails.set(rs);
                 books.add(bookDetails);
             }
-        } catch (ClassNotFoundException e) {
-            System.out.println("数据库驱动没有安装");
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
-        }
+        }finally {
+            try {
+                con.close();
+                stat.close();
+               // rs.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
 
+        }
+        return books;
+    }
+    public BookDetails getBookDetails(String bookID){
+        BookDetails book=new BookDetails();
+        try {
+            //建立连接
+            con = DriverManager.getConnection(url, databaseUser, databasePassword);
+            if (!con.isClosed()) {
+                System.out.println("数据库连接成功");
+            }
+            String sql="select * from BOOKS where ID=?";
+            stat=con.prepareStatement(sql);
+            stat.setString(1,bookID);
+            ResultSet rs= stat.executeQuery();
+            if (rs.next()){
+                book.set(rs);
+                return book;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("数据库连接失败");
+        }finally {
+            try {
+                con.close();
+                stat.close();
+//                rs.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+        }
+        return null;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb=new StringBuilder();
-        sb.append("<a href=\"showcart.jsp\">查看购物车</a>&nbsp;&nbsp;&nbsp;<a href=\"cashier.jsp\">付账</a>");
-        sb.append("<br>");
-        sb.append("<p style=\"size: 20px\"><b>请选择想购买的书:</b></p>");
 
-        sb.append("<table>");
-        Iterator<BookDetails> iterator=books.iterator();
-        while (iterator.hasNext()){
-            BookDetails bookDetails=iterator.next();
-            sb.append("<tr align=\"left\">");
-            sb.append("<td><a href=\"bookdetails.jsp?bookID="+bookDetails.ID+"\">"+bookDetails.TITLE+"</a> </td>");
-            sb.append("<td>"+bookDetails.NAME+"</td>");
-            sb.append("<td><a href=\"add.jsp?bookID="+bookDetails.ID+"\">加入购物车</a></td>");
-            sb.append("</tr>");
-        }
-        sb.append("</table>");
-        return sb.toString();
-    }
+
 }

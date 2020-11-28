@@ -10,10 +10,9 @@ public class myServletListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        BookDB books=new BookDB();
+//        BookDB books=new BookDB();
         ShoppingCart shoppingCart=new ShoppingCart();
-        books.init();
-        sce.getServletContext().setAttribute("BOOKS",books);
+//        sce.getServletContext().setAttribute("BOOKS",books);
         sce.getServletContext().setAttribute("SHOPPINGCART",shoppingCart);
 
 

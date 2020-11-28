@@ -10,7 +10,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    BookDB books= (BookDB) getServletConfig().getServletContext().getAttribute("BOOKS");
+    BookDB books=new BookDB();
     ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
     Iterator<ShoppingCartItem> iterator=shoppingCart.iterator();
 %>
