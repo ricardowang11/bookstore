@@ -1,6 +1,7 @@
 package edu.ncu.ricardowang.myJavaBean;
 
 import edu.ncu.ricardowang.myPracticalClass.BookDetails;
+import edu.ncu.ricardowang.myPracticalClass.ShoppingCartItem;
 
 import java.sql.*;
 import java.util.Iterator;
@@ -90,7 +91,63 @@ public class BookDB {
         }
         return null;
     }
+    private void closeConnection(Connection con) throws SQLException {
+        if (con!=null){
+            con.close();
+        }
+    }
+    private void closeStatement(PreparedStatement stat) throws SQLException {
+        if (stat!=null){
+            stat.close();
+        }
+    }
+    private void closeResultSet(ResultSet rs) throws SQLException {
+        if (rs!=null){
+            rs.close();
+        }
+    }
+    public boolean buyBooks(ShoppingCart shoppingCart){
+        try{
+            Connection con=DriverManager.getConnection(url,databaseUser,databasePassword);
+            con.setAutoCommit(false);
+            for (ShoppingCartItem item:shoppingCart){
+                if (!buyBook(item,con)){
+                    con.rollback();
+                    return false;
+                }
+            }
+            con.commit();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            try {
+                closeConnection(con);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
 
+        return true;
+
+    }
+    public boolean buyBook(ShoppingCartItem item,Connection con) throws SQLException {
+        String selectStatment="select * from BOOKS where ID=?";
+        PreparedStatement preparedStatement=con.prepareStatement(selectStatment);
+        preparedStatement.setString(1,item.ID);
+        ResultSet rs= preparedStatement.executeQuery();
+        if (rs.next()){
+            preparedStatement.close();
+            String updateStatment="update BOOKS set SALES=SALES +? where ID=?";
+            preparedStatement=con.prepareStatement(updateStatment);
+            preparedStatement.setInt(1,item.ammount);
+            preparedStatement.setString(2,item.ID);
+            if (preparedStatement.executeUpdate()==0){
+                return false;
+            }
+        }
+        preparedStatement.close();
+        return true;
+    }
 
 
 }
