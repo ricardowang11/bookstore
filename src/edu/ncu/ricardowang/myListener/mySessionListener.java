@@ -13,5 +13,7 @@ public class mySessionListener implements HttpSessionListener {
         se.getSession().setAttribute("SHOPPINGCART",shoppingCart);
         BookDB books=new BookDB();
         se.getSession().setAttribute("BOOKS",books);
+
+
     }
 }

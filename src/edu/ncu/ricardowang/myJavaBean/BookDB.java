@@ -25,16 +25,16 @@ public class BookDB {
     public BookDB() {
         //注册JDBC驱动程序
         try {
-//            Context ctx=new InitialContext();
-//            ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
-            Class.forName(driver);
-        } catch (ClassNotFoundException e) {
+            Context ctx=new InitialContext();
+            ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
+//            Class.forName(driver);
+        } catch (NamingException e) {
             e.printStackTrace();
         }
     }
     private Connection getConnection() throws SQLException {
 
-        return DriverManager.getConnection(url,databaseUser,databasePassword);
+        return ds.getConnection();
     }
     public  LinkedHashSet<BookDetails> getBooks(){
         LinkedHashSet<BookDetails> books=new LinkedHashSet<>();
@@ -55,17 +55,15 @@ public class BookDB {
                 bookDetails.set(rs);
                 books.add(bookDetails);
             }
+            con.close();
+            stat.close();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
         } finally {
-            try {
-                closeConnection(con);
-                closeStatement(stat);
-               // rs.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+            //                closeConnection(con);
+//                closeStatement(stat);
+            // rs.close();
 
         }
         return books;
@@ -87,17 +85,15 @@ public class BookDB {
                 book.set(rs);
                 return book;
             }
+            con.close();
+            stat.close();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
         } finally {
-            try {
-                closeConnection(con);
-                closeStatement(stat);
+            //                closeConnection(con);
+//                closeStatement(stat);
 //                rs.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
 
         }
         return null;
