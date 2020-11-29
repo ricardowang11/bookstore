@@ -15,7 +15,7 @@
 //        shoppingCart=new ShoppingCart();
 //    }
 //    ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
-    BookDB books=new BookDB();
+    BookDB books= (BookDB) session.getAttribute("BOOKS");
     BookDetails book=books.getBookDetails(ID);
     shoppingCart.add(book);
 //    getServletConfig().getServletContext().setAttribute("SHOPPINGCART",shoppingCart);

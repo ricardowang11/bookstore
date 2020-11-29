@@ -11,7 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    BookDB books=new BookDB();
+    BookDB books= (BookDB) session.getAttribute("BOOKS");
     String bookID=request.getParameter("bookID");
     BookDetails bookDetails=books.getBookDetails(bookID);
     int sales;

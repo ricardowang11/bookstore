@@ -8,7 +8,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    BookDB books=new BookDB();
+    BookDB books= (BookDB) session.getAttribute("BOOKS");
 //    ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
     ShoppingCart shoppingCart= (ShoppingCart) session.getAttribute("SHOPPINGCART");
     float price=shoppingCart.sumOfPrice;

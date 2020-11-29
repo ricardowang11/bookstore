@@ -9,10 +9,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     String username=request.getParameter("username");
-//    ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
     ShoppingCart shoppingCart= (ShoppingCart) session.getAttribute("SHOPPINGCART");
-    BookDB bookDB=new BookDB();
-    bookDB.buyBooks(shoppingCart);
+    BookDB books= (BookDB) session.getAttribute("BOOKS");
+    books.buyBooks(shoppingCart);
     //清空购物车
     shoppingCart.clear();
     shoppingCart.sumOfPrice=0;

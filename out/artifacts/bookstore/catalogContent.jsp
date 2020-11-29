@@ -13,8 +13,8 @@
 <br>
 <p style="size: 20px"><b>请选择想购买的书:</b></p>
 <%
-    BookDB bookDB= new BookDB();
-    LinkedHashSet<BookDetails> bookList=bookDB.getBooks();
+    BookDB books= (BookDB) session.getAttribute("BOOKS");
+    LinkedHashSet<BookDetails> bookList=books.getBooks();
 
 %>
 <table>

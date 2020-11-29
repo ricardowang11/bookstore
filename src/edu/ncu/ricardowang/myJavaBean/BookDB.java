@@ -21,24 +21,28 @@ public class BookDB {
     private Connection con;
     private PreparedStatement stat;
     private ResultSet rs;
-
+    private DataSource ds;
     public BookDB() {
         //注册JDBC驱动程序
         try {
+//            Context ctx=new InitialContext();
+//            ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+    private Connection getConnection() throws SQLException {
 
+        return DriverManager.getConnection(url,databaseUser,databasePassword);
+    }
     public  LinkedHashSet<BookDetails> getBooks(){
         LinkedHashSet<BookDetails> books=new LinkedHashSet<>();
         try {
 
             //建立连接
-            Context ctx=new InitialContext();
-            DataSource ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
-            Connection con=ds.getConnection();
+
+            Connection con=getConnection();
             if (!con.isClosed()) {
                 System.out.println("数据库连接成功");
             }
@@ -54,8 +58,6 @@ public class BookDB {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
-        } catch (NamingException e) {
-            e.printStackTrace();
         } finally {
             try {
                 closeConnection(con);
@@ -72,9 +74,8 @@ public class BookDB {
         BookDetails book=new BookDetails();
         try {
             //建立连接
-            Context ctx=new InitialContext();
-            DataSource ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
-            Connection con=ds.getConnection();
+
+            Connection con=getConnection();
             if (!con.isClosed()) {
                 System.out.println("数据库连接成功");
             }
@@ -89,8 +90,6 @@ public class BookDB {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
-        } catch (NamingException e) {
-            e.printStackTrace();
         } finally {
             try {
                 closeConnection(con);
@@ -120,9 +119,8 @@ public class BookDB {
     }
     public boolean buyBooks(ShoppingCart shoppingCart){
         try{
-            Context ctx=new InitialContext();
-            DataSource ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
-            Connection con=ds.getConnection();
+
+            Connection con=getConnection();
             con.setAutoCommit(false);
             for (ShoppingCartItem item:shoppingCart){
                 if (!buyBook(item,con)){
@@ -133,8 +131,6 @@ public class BookDB {
             con.commit();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } catch (NamingException e) {
-            e.printStackTrace();
         } finally {
             try {
                 closeConnection(con);
