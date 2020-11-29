@@ -6,5 +6,5 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<a href="bookstore.jsp"><img src="logo.bmp" ></a>
+<img src="logo.bmp" >
 <hr>

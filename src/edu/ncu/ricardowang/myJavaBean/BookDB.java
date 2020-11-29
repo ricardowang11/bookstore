@@ -3,6 +3,10 @@ package edu.ncu.ricardowang.myJavaBean;
 import edu.ncu.ricardowang.myPracticalClass.BookDetails;
 import edu.ncu.ricardowang.myPracticalClass.ShoppingCartItem;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -32,7 +36,9 @@ public class BookDB {
         try {
 
             //建立连接
-            con = DriverManager.getConnection(url, databaseUser, databasePassword);
+            Context ctx=new InitialContext();
+            DataSource ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
+            Connection con=ds.getConnection();
             if (!con.isClosed()) {
                 System.out.println("数据库连接成功");
             }
@@ -48,10 +54,12 @@ public class BookDB {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
-        }finally {
+        } catch (NamingException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                con.close();
-                stat.close();
+                closeConnection(con);
+                closeStatement(stat);
                // rs.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -64,7 +72,9 @@ public class BookDB {
         BookDetails book=new BookDetails();
         try {
             //建立连接
-            con = DriverManager.getConnection(url, databaseUser, databasePassword);
+            Context ctx=new InitialContext();
+            DataSource ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
+            Connection con=ds.getConnection();
             if (!con.isClosed()) {
                 System.out.println("数据库连接成功");
             }
@@ -79,10 +89,12 @@ public class BookDB {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
-        }finally {
+        } catch (NamingException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                con.close();
-                stat.close();
+                closeConnection(con);
+                closeStatement(stat);
 //                rs.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
@@ -108,7 +120,9 @@ public class BookDB {
     }
     public boolean buyBooks(ShoppingCart shoppingCart){
         try{
-            Connection con=DriverManager.getConnection(url,databaseUser,databasePassword);
+            Context ctx=new InitialContext();
+            DataSource ds= (DataSource) ctx.lookup("java:comp/env/jdbc/BookDB");
+            Connection con=ds.getConnection();
             con.setAutoCommit(false);
             for (ShoppingCartItem item:shoppingCart){
                 if (!buyBook(item,con)){
@@ -119,7 +133,9 @@ public class BookDB {
             con.commit();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        } catch (NamingException e) {
+            e.printStackTrace();
+        } finally {
             try {
                 closeConnection(con);
             } catch (SQLException throwables) {
