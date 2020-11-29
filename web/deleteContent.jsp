@@ -11,7 +11,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     String flag=request.getParameter("removeAll");
-    ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
+    ShoppingCart shoppingCart= (ShoppingCart) session.getAttribute("SHOPPINGCART");
     if (flag.equals("true")){
         shoppingCart.clear();
         shoppingCart.sumOfPrice=0;
@@ -28,7 +28,7 @@
             }
         }
     }
-    getServletConfig().getServletContext().setAttribute("SHOPPINGCART",shoppingCart);
+    session.setAttribute("SHOPPINGCART",shoppingCart);
 %>
 <h1>清除成功</h1>
 <a href="catalog.jsp">继续购物</a>&nbsp;&nbsp;&nbsp;<a href="showcart.jsp">查看购物车</a>

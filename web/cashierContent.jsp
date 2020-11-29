@@ -9,7 +9,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     BookDB books=new BookDB();
-    ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
+//    ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
+    ShoppingCart shoppingCart= (ShoppingCart) session.getAttribute("SHOPPINGCART");
     float price=shoppingCart.sumOfPrice;
 %>
 <p align="left">您一共购买了<%=shoppingCart.numberOfBooks%>本书</p>

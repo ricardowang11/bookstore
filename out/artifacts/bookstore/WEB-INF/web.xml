@@ -9,6 +9,9 @@
     <listener>
         <listener-class>edu.ncu.ricardowang.myListener.myServletListener</listener-class>
     </listener>
+    <listener>
+        <listener-class>edu.ncu.ricardowang.myListener.mySessionListener</listener-class>
+    </listener>
     <resource-ref>
         <description>DB Connextion</description>
         <res-ref-name>jdbc/BookDB</res-ref-name>
