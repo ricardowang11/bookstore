@@ -9,8 +9,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="common.jsp"%>
 <%
-    ShoppingCart shoppingCart= (ShoppingCart) session.getAttribute("SHOPPINGCART");
     Iterator<ShoppingCartItem> iterator=shoppingCart.iterator();
 %>
 <h1>您的购物车内有<%=shoppingCart.numberOfBooks%></h1>

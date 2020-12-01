@@ -3,7 +3,8 @@
 <%@ page import="javax.sql.DataSource" %>
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.ResultSet" %><%--
+<%@ page import="java.sql.ResultSet" %>
+<%--
   Created by IntelliJ IDEA.
   User: Administrator
   Date: 2020/11/27 0027
@@ -16,4 +17,8 @@
         String titlename="bookstore";
         String bodyfile="bookstoreContent.jsp";
         %>
+
 <%@include file="template.jsp"%>
+
+
+

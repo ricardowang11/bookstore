@@ -7,10 +7,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="common.jsp"%>
 <%
-    BookDB books= (BookDB) session.getAttribute("BOOKS");
-//    ShoppingCart shoppingCart= (ShoppingCart) getServletConfig().getServletContext().getAttribute("SHOPPINGCART");
-    ShoppingCart shoppingCart= (ShoppingCart) session.getAttribute("SHOPPINGCART");
     float price=shoppingCart.sumOfPrice;
 %>
 <p align="left">您一共购买了<%=shoppingCart.numberOfBooks%>本书</p>

@@ -9,13 +9,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="common.jsp"%>
 <a href="showcart.jsp">查看购物车</a>&nbsp;&nbsp;&nbsp;<a href="cashier.jsp">付账</a>
 <br>
 <p style="size: 20px"><b>请选择想购买的书:</b></p>
 <%
-    BookDB books= (BookDB) session.getAttribute("BOOKS");
     LinkedHashSet<BookDetails> bookList=books.getBooks();
-
 %>
 <table>
     <%
