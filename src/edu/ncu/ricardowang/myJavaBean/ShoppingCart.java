@@ -6,7 +6,9 @@ import edu.ncu.ricardowang.myPracticalClass.ShoppingCartItem;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+
 public class ShoppingCart extends LinkedHashSet<ShoppingCartItem> {
+    
     public int numberOfBooks=0;
     public float sumOfPrice=0;
     public void add(BookDetails book) {

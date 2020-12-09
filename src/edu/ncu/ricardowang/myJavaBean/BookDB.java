@@ -7,20 +7,20 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedHashSet;
 
 public class BookDB {
-    private String databaseUser = "root";
-    private String databasePassword = "123456789";
+//    private String databaseUser = "root";
+//    private String databasePassword = "123456789";
     //jdbc驱动
-    private String driver = "com.mysql.cj.jdbc.Driver";
-    private String url = "jdbc:mysql://47.116.142.55:3306/BookDB?&useSSL=false&serverTimezone=UTC";
-    private PreparedStatement stat;
+//    private String driver = "com.mysql.cj.jdbc.Driver";
+//    private String url = "jdbc:mysql://47.116.142.55:3306/BookDB?&useSSL=false&serverTimezone=UTC";
+//    private PreparedStatement stat;
     private DataSource ds;
-
     public BookDB() {
         //注册JDBC驱动程序
         try {
@@ -31,57 +31,59 @@ public class BookDB {
             e.printStackTrace();
         }
     }
-
     private Connection getConnection() throws SQLException {
 
         return ds.getConnection();
     }
-
     public LinkedHashSet<BookDetails> getBooks() {
         LinkedHashSet<BookDetails> books = new LinkedHashSet<>();
+        Connection con=null;
+        PreparedStatement stat=null;
+        ResultSet rs=null;
         try {
 
             //建立连接
 
-            Connection con = getConnection();
+             con = getConnection();
             if (!con.isClosed()) {
                 System.out.println("数据库连接成功");
             }
             String sql = "select * from BOOKS";
-            stat = con.prepareStatement(sql);
+             stat = con.prepareStatement(sql);
 
-            ResultSet rs = stat.executeQuery();
+             rs = stat.executeQuery();
             while (rs.next()) {
                 BookDetails bookDetails = new BookDetails();
                 bookDetails.set(rs);
                 books.add(bookDetails);
             }
-            closeConnection(con);
-            closePrepStmt(stat);
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("数据库连接失败");
         } finally {
-            //
-            // rs.close();
-
+            closeConnection(con);
+            closePrepStmt(stat);
+            closeResultSet(rs);
         }
         return books;
     }
-
     public BookDetails getBookDetails(String bookID) {
         BookDetails book = new BookDetails();
+        Connection con=null;
+        PreparedStatement stat=null;
+        ResultSet rs=null;
         try {
             //建立连接
 
-            Connection con = getConnection();
+             con = getConnection();
             if (!con.isClosed()) {
                 System.out.println("数据库连接成功");
             }
             String sql = "select * from BOOKS where ID=?";
-            stat = con.prepareStatement(sql);
+             stat = con.prepareStatement(sql);
             stat.setString(1, bookID);
-            ResultSet rs = stat.executeQuery();
+             rs = stat.executeQuery();
             if (rs.next()) {
                 book.set(rs);
                 return book;
@@ -91,19 +93,18 @@ public class BookDB {
             e.printStackTrace();
             System.out.println("数据库连接失败");
         } finally {
-            //
-//                rs.close();
+            closeConnection(con);
+            closePrepStmt(stat);
+            closeResultSet(rs);
 
         }
         return null;
     }
-
-
-
     public boolean buyBooks(ShoppingCart shoppingCart) {
+        Connection con=null;
         try {
 
-            Connection con = getConnection();
+            con = getConnection();
             con.setAutoCommit(false);
             for (ShoppingCartItem item : shoppingCart) {
                 if (!buyBook(item, con)) {
@@ -112,16 +113,17 @@ public class BookDB {
                 }
             }
             con.commit();
-            closeConnection(con);
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            closeConnection(con);
         }
 
 
         return true;
 
     }
-
     public boolean buyBook(ShoppingCartItem item, Connection con) throws SQLException {
         String selectStatment = "select * from BOOKS where ID=?";
         PreparedStatement preparedStatement = con.prepareStatement(selectStatment);
@@ -140,7 +142,6 @@ public class BookDB {
         preparedStatement.close();
         return true;
     }
-
     public void closeConnection(Connection con){
         try{
             if(con!=null) con.close();
@@ -148,7 +149,6 @@ public class BookDB {
             e.printStackTrace();
         }
     }
-
     public void closePrepStmt(PreparedStatement prepStmt){
         try{
             if(prepStmt!=null) prepStmt.close();
@@ -156,12 +156,12 @@ public class BookDB {
             e.printStackTrace();
         }
     }
-
     public void closeResultSet(ResultSet rs){
         try{
             if(rs!=null) rs.close();
         }catch(Exception e){
             e.printStackTrace();
         }
+
     }
 }
