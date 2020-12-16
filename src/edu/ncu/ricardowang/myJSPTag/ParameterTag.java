@@ -6,17 +6,21 @@ import java.util.ArrayList;
 
 /**
  * @Author: wangqin
- * @Date: 2020/12/8 0008 - 12 -08 -19:42
+ * @Date: 2020/12/9 0009 - 12 -09 -10:42
  * @Description: edu.ncu.ricardowang.myJSPTag
  * @version: 1.0
  */
 public class ParameterTag extends TagSupport {
-    private String paramName = null;
-    private String paramValue = null;
-    private String isDirectString = null;
+    private String isDirectString;
+    private String paramName;
+    private String paramValue;
 
     public ParameterTag() {
         super();
+    }
+
+    public void setDirect(String isDirectString) {
+        this.isDirectString = isDirectString;
     }
 
     public void setName(String paramName) {
@@ -27,30 +31,26 @@ public class ParameterTag extends TagSupport {
         this.paramValue = paramValue;
     }
 
-    public void setDirect(String isDirectString) {
-        this.isDirectString = isDirectString;
+    @Override
+    public int doStartTag() throws JspException {
+        boolean isDirect=false;
+        ArrayList params= (ArrayList) ((TagSupport)getParent()).getValue("params");
+        if (params == null) {
+            return SKIP_BODY;
+        }
+        if (isDirectString!=null&&isDirectString.equals("true")){
+            isDirect=true;
+        }
+        Parameter parameter=new Parameter(isDirect,paramName,paramValue);
+        params.add(parameter);
+        return EVAL_BODY_INCLUDE;
     }
 
     @Override
-    public int doStartTag() throws JspException {
-        boolean isDirect = false;
-        if ((isDirectString != null) && isDirectString.toLowerCase().equals("true"))
-            isDirect = true;
-
-        if (paramName != null) {
-            ArrayList parameters = (ArrayList) ((TagSupport) getParent()).getValue("parameters");
-            if (parameters != null) {
-                Parameter param = new Parameter(paramName, isDirect, paramValue);
-                parameters.add(param);
-            }
-        }
-
-        return SKIP_BODY;
-
-    }
-    public void release(){
-        paramName=null;
-        paramValue=null;
+    public void release() {
         isDirectString=null;
+        paramValue=null;
+        paramName=null;
+        super.release();
     }
 }

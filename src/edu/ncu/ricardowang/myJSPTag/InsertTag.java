@@ -7,53 +7,43 @@ import java.io.IOException;
 
 /**
  * @Author: wangqin
- * @Date: 2020/12/8 0008 - 12 -08 -20:58
+ * @Date: 2020/12/9 0009 - 12 -09 -10:42
  * @Description: edu.ncu.ricardowang.myJSPTag
  * @version: 1.0
  */
 public class InsertTag extends TagSupport {
-    private boolean directInclude=false;
-    private String parameterName=null;
-    private String dedinitionName=null;
-    private Definition definition=null;
-    private Parameter parameter=null;
-    public InsertTag(){
-        super();
+    private Definition definition;
+    private String definitionName;
+    private Parameter parameter;
+    private String parameterName;
+    private boolean isDirect;
+
+    public void setDefinition(String definitionName) {
+        this.definitionName = definitionName;
     }
 
-    public void setDefinition(String name) {
-        this.dedinitionName = name;
-    }
-
-    public void setParameter(String name) {
-        this.parameterName = name;
+    public void setParameter(String parameterName) {
+        this.parameterName = parameterName;
     }
 
     @Override
     public int doStartTag() throws JspException {
-        definition=(Definition)pageContext.getAttribute(dedinitionName);
-        if (parameterName != null&& definition!=null) {
-            parameter= definition.getParam(parameterName);
+        definition= (Definition) pageContext.getAttribute(definitionName);
+        if (definition==null){
+            return SKIP_BODY;
         }
-        if (parameter != null) {
-            directInclude=parameter.isDirect();
+        parameter= definition.getParam(parameterName);
+        if (parameter == null) {
+            return SKIP_BODY;
         }
-        return SKIP_BODY;
-    }
-
-    @Override
-    public int doEndTag() throws JspException {
+        isDirect=parameter.isDirect();
         try {
-            if (directInclude&&parameter!=null){
-                pageContext.getOut().print(parameter.getValue());
+            if (isDirect){
+                pageContext.getOut().print(parameter.getParamValue());
             }else{
-                if (parameter!=null&&parameter.getValue()!=null){
-                    pageContext.include(parameter.getValue());
-                }
+                pageContext.include(parameter.getParamValue());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ServletException e) {
+        } catch (IOException | ServletException e) {
             e.printStackTrace();
         }
         return EVAL_PAGE;
@@ -61,11 +51,10 @@ public class InsertTag extends TagSupport {
 
     @Override
     public void release() {
-        directInclude=false;
-        parameterName=null;
         definition=null;
-        dedinitionName=null;
+        definitionName=null;
         parameter=null;
+        parameterName=null;
         super.release();
     }
 }

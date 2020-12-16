@@ -4,16 +4,15 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * @Author: wangqin
- * @Date: 2020/12/8 0008 - 12 -08 -20:46
+ * @Date: 2020/12/9 0009 - 12 -09 -10:41
  * @Description: edu.ncu.ricardowang.myJSPTag
  * @version: 1.0
  */
 public class DefinitionTag extends TagSupport {
-    private String definitionName=null;
+    private String name;
     private String screenId;
     private int screenNum;
 
@@ -21,8 +20,8 @@ public class DefinitionTag extends TagSupport {
         super();
     }
 
-    public void setName(String definitionName) {
-        this.definitionName = definitionName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setScreenId(String screenId) {
@@ -35,42 +34,28 @@ public class DefinitionTag extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        HashMap screens=null;
-        screens=(HashMap)pageContext.getAttribute("screens",pageContext.APPLICATION_SCOPE);
-        if (screens == null) {
+        HashMap screens= (HashMap) pageContext.getAttribute("screens",pageContext.APPLICATION_SCOPE);
+        if (screens==null){
             pageContext.setAttribute("screens",new HashMap(),pageContext.APPLICATION_SCOPE);
-        }else  {
-            if (screens.size()==screenNum){
-                return SKIP_BODY;
-            }
+        }
+        if (screens.size()==screenNum) {
+            return SKIP_BODY;
         }
         return EVAL_BODY_INCLUDE;
     }
 
     @Override
     public int doEndTag() throws JspException {
+        HashMap screens= (HashMap) pageContext.getAttribute("screens",pageContext.APPLICATION_SCOPE);
+        ArrayList<Parameter> params= (ArrayList) screens.get(screenId);
+        if (params == null) {
+            return SKIP_PAGE;
+        }
         Definition definition=new Definition();
-        HashMap screens=null;
-        ArrayList parameters=null;
-        TagSupport screen=null;
-
-        screens=(HashMap)pageContext.getAttribute("screens",pageContext.APPLICATION_SCOPE);
-        if (screens != null) {
-            parameters=(ArrayList)screens.get(screenId);
+        for (Parameter param : params) {
+            definition.setParam(param);
         }
-        Iterator ir=null;
-        if (parameters != null) {
-            ir=parameters.iterator();
-            while((ir!=null)&&ir.hasNext()){
-                definition.setParam((Parameter)ir.next());
-            }
-            pageContext.setAttribute(definitionName,definition);
-        }
+        pageContext.setAttribute(name,definition);
         return EVAL_PAGE;
-    }
-    public void release(){
-        definitionName=null;
-        screenId=null;
-        super.release();
     }
 }

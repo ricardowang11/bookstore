@@ -7,6 +7,10 @@
         <element id="directory" name="classes">
           <element id="module-output" name="bookstore" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="application" name="mysql-connector-java-8.0.16" />
+          <element id="library" level="application" name="tomcat" />
+        </element>
       </element>
     </root>
   </artifact>

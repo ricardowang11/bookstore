@@ -16,10 +16,10 @@ import java.util.LinkedHashSet;
 public class BookDB {
 //    private String databaseUser = "root";
 //    private String databasePassword = "123456789";
-    //jdbc驱动
+//    //jdbc驱动
 //    private String driver = "com.mysql.cj.jdbc.Driver";
 //    private String url = "jdbc:mysql://47.116.142.55:3306/BookDB?&useSSL=false&serverTimezone=UTC";
-//    private PreparedStatement stat;
+    private PreparedStatement stat;
     private DataSource ds;
     public BookDB() {
         //注册JDBC驱动程序
@@ -32,7 +32,6 @@ public class BookDB {
         }
     }
     private Connection getConnection() throws SQLException {
-
         return ds.getConnection();
     }
     public LinkedHashSet<BookDetails> getBooks() {
